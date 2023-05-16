@@ -1,4 +1,5 @@
 import isEqual from 'lodash.isequal';
+import union from 'lodash.union';
 import { MathfieldOptions } from 'mathlive';
 import React, {
   useEffect,
@@ -8,7 +9,8 @@ import React, {
 } from 'react';
 import { renderToString } from 'react-dom/server';
 import { MathViewProps, MathViewRef } from './types';
-import _ from 'lodash';
+
+export interface IStringIndex extends Record<string, any> {};
 
 /**
  * These are options that are passed as a product of MathFieldOptions
@@ -42,7 +44,7 @@ export const OPTIONS: Array<keyof MathfieldOptions> = [
 /**
  * mount/unmount are unhandled
  */
-const FUNCTION_MAPPING = {
+const FUNCTION_MAPPING: IStringIndex = {
   /** retargeting onChange to fire input events to match react expected behavior */
   onChange: 'input',
   onInput: 'input',
@@ -53,6 +55,7 @@ const FUNCTION_MAPPING = {
   onCommit: 'change',
   // onContentDidChange,
   // onContentWillChange,
+  onLoad: 'mount',
   onError: 'math-error',
   onKeystroke: 'keystroke',
   onModeChange: 'mode-change',
@@ -68,7 +71,7 @@ const FUNCTION_MAPPING = {
 
 const FUNCTION_PROPS = Object.keys(FUNCTION_MAPPING);
 
-const MAPPING = {
+const MAPPING : IStringIndex= {
   className: 'class',
   htmlFor: 'for'
 };
@@ -100,7 +103,7 @@ export function useValue(
   useEffect(() => {
     if (!ref.current) return;
     if (ref.current.setValue !== undefined) {
-    ref.current?.setValue(value);
+      ref.current?.setValue(value);
     } else {
       console.log('ref.current.setValue is undefined');
     }
@@ -113,9 +116,9 @@ export function useValue(
  * @param props The props to filter
  * @returns [config -> to be set on the ref, passProps -> to be passed through to the mathfield element]
  */
-export function filterConfig(props: MathViewProps) {
-  const config: Partial<MathfieldOptions> = {};
-  const passProps: MathViewProps = {};
+export function filterConfig(props: IStringIndex & MathViewProps) {
+  const config: Partial<IStringIndex & MathfieldOptions> = {};
+  const passProps: IStringIndex & MathViewProps = {};
   for (const _key in props) {
     let key = _key;
     if (hasKey(MAPPING, key)) {
@@ -198,8 +201,8 @@ export function useControlledConfig(
  * @param config
  */
 export function useUpdateOptions(
-  ref: React.RefObject<MathViewRef>,
-  config: Partial<MathfieldOptions>
+  ref: React.RefObject<IStringIndex & MathViewRef>,
+  config: Partial<IStringIndex & MathfieldOptions>
 ) {
   const configRef = useRef(config);
   useLayoutEffect(() => {
@@ -207,7 +210,7 @@ export function useUpdateOptions(
     if (!isEqual(configRef.current, config)) {
       const currentOptions = configRef.current;
       const nextOptions = config;
-      const keys = _.union(
+      const keys = union(
         Object.keys(currentOptions),
         Object.keys(nextOptions)
       );
@@ -235,7 +238,7 @@ export function useUpdateOptions(
 
 export function useEventRegistration(
   ref: React.RefObject<HTMLElement>,
-  props: MathViewProps
+  props: IStringIndex & MathViewProps
 ) {
   useEffect(() => {
     const node = ref.current;

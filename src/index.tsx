@@ -1,5 +1,4 @@
-import { MathfieldElement  } from 'mathlive';
-import 'mathlive/fonts.css';
+import { MathfieldElement } from 'mathlive';
 import React, { useEffect, useImperativeHandle, useMemo, useRef } from 'react';
 import { MathViewProps } from './types';
 import {
@@ -13,18 +12,34 @@ import {
 const MathView = React.forwardRef<MathfieldElement, MathViewProps>(
   (props, ref) => {
     const containerRef = React.useRef<HTMLDivElement>(null);
-    const mfe = useMemo(() => new MathfieldElement(), []);
-
+    // const mfe = useMemo(
+    //   () => ,
+    //   [null]
+    // );
+    const _ref = useRef<MathfieldElement>(new MathfieldElement(props.options));
+    const mfe = _ref.current;
+    console.log(props.options);
     useEffect(() => {
       const container = containerRef.current!!;
-      container.innerHTML = "";
+      container.innerHTML = '';
       container.appendChild(mfe);
     }, [mfe]);
-    const _ref = useRef<MathfieldElement>(mfe);
-    useImperativeHandle(ref, () => {
-      console.log(ref);
-      return mfe;
-    }, [mfe]);
+    useImperativeHandle(
+      ref,
+      () => {
+        console.log('mfe', mfe);
+        return mfe;
+      },
+      [mfe]
+    );
+    console.log('ref', ref);
+    // useImperativeHandle(
+    //   ref,
+    //   () => {
+    //     return mfe;
+    //   },
+    //   [mfe]
+    // );
     const value = useValue(props, _ref);
     const [config, passProps] = useMemo(() => filterConfig(props), [props]);
     const transformedConfig = useControlledConfig(value, config);
@@ -34,7 +49,7 @@ const MathView = React.forwardRef<MathfieldElement, MathViewProps>(
       for (const key in passProps) {
         if (key === 'children') continue;
 
-     mfe.setAttribute(key, passProps[key]);
+        mfe.setAttribute(key, passProps[key]);
       }
     }, [passProps, mfe]);
     return (

@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import MathView, { MathViewProps, MathViewRef } from 'react-math-view';
+import 'mathlive/fonts.css';
 
 const MathWithKeyboard = React.memo((props: MathViewProps) => {
   const ref = useRef<MathViewRef>(null);

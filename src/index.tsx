@@ -18,7 +18,6 @@ const MathView = React.forwardRef<MathfieldElement, MathViewProps>(
     // );
     const _ref = useRef<MathfieldElement>(new MathfieldElement(props.options));
     const mfe = _ref.current;
-    console.log(props.options);
     useEffect(() => {
       const container = containerRef.current!!;
       container.innerHTML = '';
@@ -27,12 +26,10 @@ const MathView = React.forwardRef<MathfieldElement, MathViewProps>(
     useImperativeHandle(
       ref,
       () => {
-        console.log('mfe', mfe);
         return mfe;
       },
       [mfe]
     );
-    console.log('ref', ref);
     // useImperativeHandle(
     //   ref,
     //   () => {

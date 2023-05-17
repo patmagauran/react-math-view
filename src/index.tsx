@@ -50,7 +50,7 @@ const MathView = React.forwardRef<MathfieldElement, MathViewProps>(
       }
     }, [passProps, mfe]);
     return (
-      <div ref={containerRef} />
+      <div className={props.containerClassName} ref={containerRef} />
       // <math-field
       //   {...passProps}
       //   // onFocus={props.onFocus}

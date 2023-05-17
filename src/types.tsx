@@ -19,6 +19,7 @@ export declare type MathChangeEvent = React.SyntheticEvent<
 export declare type MathViewProps = PropsWithChildren<
   Partial<
     ExcludeField<React.HTMLAttributes<MathfieldElement>, 'onChange'> & {
+      containerClassName?: string;
       /** LaTeX to render, optionally can be passed as child */
       value: string;
       onFocus: React.HTMLAttributes<MathfieldElement>['onFocus'];
